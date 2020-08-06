@@ -19,10 +19,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("INSERT INTO PEDIDOS VALUES({0}, {1}, {2})", pedidos.Id, pedidos.Id_Pizza, pedidos.Data_Pedido);
+                    string query = string.Format("INSERT INTO PEDIDOS VALUES(@ID, @ID_PIZZA, @DATA_PEDIDO)");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", pedidos.Id);
+                        cmd.Parameters.AddWithValue("@ID_PIZZA", pedidos.Id_Pizza);
+                        cmd.Parameters.AddWithValue("@DATA_PEDIDO", pedidos.Data_Pedido);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -102,7 +106,8 @@ namespace EstoquePizzaDLL
                                 Id_Pizza = Convert.ToInt32(dr["ID_PIZZA"]),
                                 Tamanho_Pizza = dr["TAMANHO"].ToString(),
                                 Sabor_Pizza = dr["SABOR"].ToString(),
-                                Valor_Pizza = Convert.ToDouble(dr["VALOR"])
+                                Valor_Pizza = Convert.ToDouble(dr["VALOR"]),
+                                Data_Pedido = dr["DATA_PEDIDO"].ToString()
 
                             };
 
