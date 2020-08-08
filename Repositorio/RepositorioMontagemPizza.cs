@@ -19,10 +19,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("INSERT INTO MONTAGEMPIZZA VALUES({0}, {1}, '{2}')", montagemPizza.Id_Pizza, montagemPizza.Id_Ingrediente, montagemPizza.Qnt_Ingrediente);
+                    string query = string.Format("INSERT INTO MONTAGEMPIZZA VALUES(@ID_PIZZA, @ID_INGREDIENTE, @QNT_INGREDIENTE)", montagemPizza.Id_Pizza, montagemPizza.Id_Ingrediente, montagemPizza.Qnt_Ingrediente);
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID_PIZZA", montagemPizza.Id_Pizza);
+                        cmd.Parameters.AddWithValue("@ID_INGREDIENTE", montagemPizza.Id_Ingrediente);
+                        cmd.Parameters.AddWithValue("@QNT_INGREDIENTE", montagemPizza.Qnt_Ingrediente);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -41,10 +45,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("UPDATE MONTAGEMPIZZA SET QNT_INGREDIENTE = '{0}' WHERE ID_PIZZA = {1} AND ID_INGREDIENTE = {2}", montagemPizza.Qnt_Ingrediente, montagemPizza.Id_Pizza, montagemPizza.Id_Ingrediente);
+                    string query = string.Format("UPDATE MONTAGEMPIZZA SET QNT_INGREDIENTE = @QNT_INGREDIENTE WHERE ID_PIZZA = @ID_PIZZA AND ID_INGREDIENTE = @ID_INGREDIENTE");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@QNT_INGREDIENTE", montagemPizza.Qnt_Ingrediente);
+                        cmd.Parameters.AddWithValue("@ID_PIZZA", montagemPizza.Id_Pizza);
+                        cmd.Parameters.AddWithValue("@ID_INGREDIENTE", montagemPizza.Id_Ingrediente);
+                        
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -63,10 +71,13 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("DELETE FROM MONTAGEMPIZZA WHERE ID_PIZZA = {0} AND ID_INGREDIENTE = {1}", montagemPizza.Id_Pizza, montagemPizza.Id_Ingrediente);
+                    string query = string.Format("DELETE FROM MONTAGEMPIZZA WHERE ID_PIZZA = @ID_PIZZA AND ID_INGREDIENTE = @ID_INGREDIENTE");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID_PIZZA", montagemPizza.Id_Pizza);
+                        cmd.Parameters.AddWithValue("@ID_INGREDIENTE", montagemPizza.Id_Ingrediente);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }

@@ -19,10 +19,15 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("INSERT INTO PIZZA (tamanho, sabor, valor, custo) VALUES('{0}', '{1}', {2}, {3})", pizza.Tamanho, pizza.Sabor, pizza.Valor, pizza.Custo);
+                    string query = string.Format("INSERT INTO PIZZA (tamanho, sabor, valor, custo) VALUES(@TAMANHO, @SABOR, @VALOR, @CUSTO)");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@TAMANHO", pizza.Tamanho);
+                        cmd.Parameters.AddWithValue("@SABOR", pizza.Sabor);
+                        cmd.Parameters.AddWithValue("@VALOR", pizza.Valor);
+                        cmd.Parameters.AddWithValue("@CUSTO", pizza.Custo);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -41,10 +46,12 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("DELETE FROM PIZZA WHERE ID= {0}", pizza.Id);
+                    string query = string.Format("DELETE FROM PIZZA WHERE ID = @ID");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", pizza.Id);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -63,12 +70,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT VALOR FROM PIZZA WHERE ID = {0}", pizza.Id);
+                    string query = string.Format("SELECT VALOR FROM PIZZA WHERE ID = @ID");
 
                     double retorno = 0;
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", pizza.Id); 
+                        
                         SQLiteDataReader dr = cmd.ExecuteReader();
 
                         while (dr.Read())
@@ -125,12 +134,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT * FROM PIZZA WHERE ID = {0}", pizza.Id);
+                    string query = string.Format("SELECT * FROM PIZZA WHERE ID = @ID");
 
                     List<Pizza> retorno = new List<Pizza>();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", pizza.Id);
+
                         SQLiteDataReader dr = cmd.ExecuteReader();
 
                         while (dr.Read())
@@ -207,10 +218,17 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("UPDATE PIZZA SET TAMANHO = '{0}', SABOR = '{1}', VALOR = {2}, CUSTO {3} WHERE ID = {4} ", pizza.Tamanho, pizza.Sabor, pizza.Valor, pizza.Custo, pizza.Id);
+                    string query = string.Format("UPDATE PIZZA SET TAMANHO = @TAMANHO, SABOR = @SABOR, VALOR = @VALOR, CUSTO = @CUSTO WHERE ID = @ID ", pizza.Tamanho, pizza.Sabor, pizza.Valor, pizza.Custo, pizza.Id);
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@TAMANHO", pizza.Tamanho);
+                        cmd.Parameters.AddWithValue("@SABOR", pizza.Sabor);
+                        cmd.Parameters.AddWithValue("@VALOR", pizza.Valor);
+                        cmd.Parameters.AddWithValue("@CUSTO", pizza.Custo);
+                        cmd.Parameters.AddWithValue("@ID", pizza.Id);
+
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }

@@ -22,10 +22,15 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("INSERT INTO INGREDIENTES (nome, custo, quantidade, grandeza) VALUES('{0}', '{1}', '{2}', '{3}')", ingredientes.Nome, ingredientes.Custo, ingredientes.Quantidade, ingredientes.Grandeza);
+                    string query = string.Format("INSERT INTO INGREDIENTES (nome, custo, quantidade, grandeza) VALUES(@NOME, @CUSTO, @QUANTIDADE, @GRANDEZA)");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@NOME", ingredientes.Nome);
+                        cmd.Parameters.AddWithValue("@CUSTO", ingredientes.Custo);
+                        cmd.Parameters.AddWithValue("@QUANTIDADE", ingredientes.Quantidade);
+                        cmd.Parameters.AddWithValue("@GRANDEZA", ingredientes.Grandeza);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -44,10 +49,12 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("DELETE FROM INGREDIENTES WHERE ID= {0}", ingredientes.Id);
+                    string query = string.Format("DELETE FROM INGREDIENTES WHERE ID= @ID");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", ingredientes.Id);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -66,10 +73,16 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("UPDATE INGREDIENTES SET NOME = '{0}', CUSTO = {1}, QUANTIDADE = {2}, GRANDEZA = {3} WHERE ID= {4}", ingredientes.Nome, ingredientes.Custo, ingredientes.Quantidade, ingredientes.Grandeza, ingredientes.Id);
+                    string query = string.Format("UPDATE INGREDIENTES SET NOME = @NOME, CUSTO = @CUSTO, QUANTIDADE = @QUANTIDADE, GRANDEZA = @GRANDEZA WHERE ID = @ID");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@NOME", ingredientes.Nome);
+                        cmd.Parameters.AddWithValue("@CUSTO", ingredientes.Custo);
+                        cmd.Parameters.AddWithValue("@QUANTIDADE", ingredientes.Quantidade);
+                        cmd.Parameters.AddWithValue("@GRANDEZA", ingredientes.Grandeza);
+                        cmd.Parameters.AddWithValue("@ID", ingredientes.Id);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -88,10 +101,12 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT * FROM INGREDIENTES WHERE ID= {0}", ingredientes.Id);
+                    string query = string.Format("SELECT * FROM INGREDIENTES WHERE ID = @ID");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", ingredientes.Id);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -139,6 +154,44 @@ namespace EstoquePizzaDLL
             }
         }
 
+        internal List<Ingredientes> GetInfoIngredientes()
+        {
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(sqlitecon))
+                {
+                    connection.Open();
+
+                    string query = string.Format("SELECT ID, NOME, GRANDEZA FROM INGREDIENTES");
+
+                    List<MostrarIngredientes> retorno = new List<MostrarIngredientes>();
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                    {
+                        SQLiteDataReader dr = cmd.ExecuteReader();
+
+                        while (dr.Read())
+                        {
+                            MostrarIngredientes aux = new MostrarIngredientes()
+                            {
+                                Id = Convert.ToInt32(dr["ID"]),
+                                Nome = dr["NOME"].ToString(),
+                                Grandeza = dr["GRANDEZA"].ToString()
+                            };
+
+                            retorno.Add(aux);
+                        }
+
+                        return retorno.Count > 0 ? retorno : null;
+                    }
+                }
+            }
+            catch (SQLiteException e)
+            {
+                throw;
+            }
+        }
+
         internal List<Ingredientes> SelectIdIngredientes(Ingredientes ingredientes)
         {
             try
@@ -147,12 +200,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT * FROM INGREDIENTES WHERE ID = {0}", ingredientes.Id);
+                    string query = string.Format("SELECT * FROM INGREDIENTES WHERE ID = @ID");
 
                     List<Ingredientes> retorno = new List<Ingredientes>();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", ingredientes.Id);
+
                         SQLiteDataReader dr = cmd.ExecuteReader();
 
                         while (dr.Read())
@@ -188,12 +243,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT GRANDEZA FROM INGREDIENTES WHERE ID = {0}", ingredientes.Id);
+                    string query = string.Format("SELECT GRANDEZA FROM INGREDIENTES WHERE ID = @ID");
 
                     string retorno = null;
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", ingredientes.Id);
+
                         SQLiteDataReader dr = cmd.ExecuteReader();
 
                         while (dr.Read())

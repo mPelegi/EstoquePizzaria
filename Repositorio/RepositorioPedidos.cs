@@ -45,10 +45,13 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("DELETE FROM PEDIDOS WHERE ID = {0} AND ID_PIZZA = {1}", pedidos.Id, pedidos.Id_Pizza);
+                    string query = string.Format("DELETE FROM PEDIDOS WHERE ID = @ID AND ID_PIZZA = @ID_PIZZA");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", pedidos.Id);
+                        cmd.Parameters.AddWithValue("@ID_PIZZA", pedidos.Id_Pizza);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
@@ -59,7 +62,7 @@ namespace EstoquePizzaDLL
             }
         }
 
-        internal bool UpdatePedidos(Pedidos pedidos, int novoId_Pizza) //Checar se a melhor forma
+        internal bool UpdatePedidos(AtualizarPedido atualizarPedido)
         {
             try
             {
@@ -67,10 +70,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("UPDATE PEDIDOS SET ID_PIZZA = {0} WHERE ID = {1} AND ID_PIZZA = {2} AND DATA_PEDIDO = {2}", pedidos.Id_Pizza, pedidos.Id, novoId_Pizza, pedidos.Data_Pedido);
+                    string query = string.Format("UPDATE PEDIDOS SET ID_PIZZA = @NOVO_ID_PIZZA WHERE ID = @ID AND ID_PIZZA = @ANTIGO_ID_PIZZA");
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@NOVO_ID_PIZZA", atualizarPedido.Novo_Id_Pizza);
+                        cmd.Parameters.AddWithValue("@ID", atualizarPedido.Id);
+                        cmd.Parameters.AddWithValue("@ANTIGO_ID_PIZZA", atualizarPedido.Antigo_Id_Pizza);
+
                         return cmd.ExecuteNonQuery() > 0 ? true : false;
                     }
                 }
