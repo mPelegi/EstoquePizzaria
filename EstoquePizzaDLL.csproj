@@ -74,6 +74,7 @@
     <Compile Include="Classes\Ingredientes.cs" />
     <Compile Include="Classes\MontagemPizza.cs" />
     <Compile Include="Classes\MostrarIngredientes.cs" />
+    <Compile Include="Classes\MostrarMontagemPizza.cs" />
     <Compile Include="Classes\MostrarPedidos.cs" />
     <Compile Include="Classes\Pedidos.cs" />
     <Compile Include="Classes\Pizza.cs" />

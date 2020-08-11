@@ -15,6 +15,25 @@ namespace EstoquePizzaDLL
             repositorioPizza = new RepositorioPizza();
         }
 
+        public bool InserirPizza(Pizza pizza)
+        {
+            try
+            {
+                bool retorno = false;
+
+                if (ValidaPizza(pizza))
+                {
+                    retorno = repositorioPizza.InsertPizza(pizza);
+                }
+
+                return retorno;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         public List<Pizza> ListarPizzas()
         {
             try
@@ -50,6 +69,7 @@ namespace EstoquePizzaDLL
                 throw;
             }
         }
+
         public int RetornaUltimoIdPizza()
         {
             try
@@ -59,6 +79,34 @@ namespace EstoquePizzaDLL
             catch (Exception e)
             {
                 throw;
+            }
+        }
+
+        private bool ValidaPizza(Pizza pizza)
+        {
+            if (pizza.Id <= 0)
+            {
+                return false;
+            }
+            else if(pizza.Tamanho == null)
+            {
+                return false;
+            }
+            else if(pizza.Sabor == null)
+            {
+                return false;
+            }
+            else if(pizza.Valor <= 0)
+            {
+                return false;
+            }
+            else if(pizza.Custo <= 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

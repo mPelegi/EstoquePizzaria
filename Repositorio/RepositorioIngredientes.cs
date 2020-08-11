@@ -154,7 +154,7 @@ namespace EstoquePizzaDLL
             }
         }
 
-        internal List<Ingredientes> GetInfoIngredientes()
+        internal List<MostrarIngredientes> GetInfoIngredientes(MostrarIngredientes mostrarIngredientes)
         {
             try
             {
@@ -162,12 +162,14 @@ namespace EstoquePizzaDLL
                 {
                     connection.Open();
 
-                    string query = string.Format("SELECT ID, NOME, GRANDEZA FROM INGREDIENTES");
+                    string query = string.Format("SELECT ID, NOME, GRANDEZA FROM INGREDIENTES WHERE ID = @ID");
 
                     List<MostrarIngredientes> retorno = new List<MostrarIngredientes>();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                     {
+                        cmd.Parameters.AddWithValue("@ID", mostrarIngredientes.Id);
+
                         SQLiteDataReader dr = cmd.ExecuteReader();
 
                         while (dr.Read())

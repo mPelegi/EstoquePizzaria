@@ -79,6 +79,18 @@ namespace EstoquePizzaDLL
             }
         }
 
+        public List<MostrarIngredientes> ListarInformacoesIngredientes(MostrarIngredientes mostrarIngredientes)
+        {
+            try
+            {
+                return repositorioIngredientes.GetInfoIngredientes(mostrarIngredientes);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         public string RetornaGrandezaIngrediente(Ingredientes ingredientes)
         {
             try
